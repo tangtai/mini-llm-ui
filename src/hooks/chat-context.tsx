@@ -10,6 +10,7 @@ interface ChatContextType {
   loading: boolean;
   setMessage: (message: string) => void;
   submitMessage: () => void;
+  clearAllMessages: () => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -88,7 +89,7 @@ const initialMessages: ChatMessage[] = [
 ];
 
 const ChatProvider: FC<ChatProviderProps> = ({ children }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -123,9 +124,20 @@ const ChatProvider: FC<ChatProviderProps> = ({ children }) => {
     setLoading(false);
   };
 
+  const clearAllMessages = () => {
+    setMessages([]);
+  };
+
   return (
     <ChatContext.Provider
-      value={{ messages, message, loading, setMessage, submitMessage }}
+      value={{
+        messages,
+        message,
+        loading,
+        setMessage,
+        submitMessage,
+        clearAllMessages,
+      }}
     >
       {children}
     </ChatContext.Provider>
