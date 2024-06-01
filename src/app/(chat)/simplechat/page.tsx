@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { ChatBox } from "@/components/ui/chatbox";
 import { ChatContext } from "@/hooks/chat-context";
 import { useContext, useRef, useEffect, useCallback } from "react";
-import { api } from "@/trpc/react";
 
 export default function Page() {
   const context = useContext(ChatContext);
@@ -22,7 +21,6 @@ export default function Page() {
     clearAllMessages,
   } = context;
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  const { data, isLoading, error } = api.post.getLatest.useQuery();
 
   const scrollToBottom = useCallback(() => {
     chatContainerRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,7 +55,6 @@ export default function Page() {
     <main className="relative flex min-h-screen flex-col">
       <div className="container mx-auto flex flex-grow flex-col justify-between">
         <div className="col-span-5 flex flex-col gap-4 py-4">
-          <p>{JSON.stringify(data)}</p>
           <div className="h-12" ref={chatContainerRef}></div>
           {messages.map((message, index) => {
             return <ChatBox key={index} message={message} />;
