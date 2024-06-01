@@ -6,13 +6,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import Markdown from "react-markdown";
 import { Skeleton } from "./skeleton";
+import { api } from "@/trpc/react";
 
 interface ChatBoxProps {
   message: ChatMessage;
   assistantTyping?: boolean;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({
+const ChatBox: React.FC<ChatBoxProps> = async ({
   message,
   assistantTyping = false,
 }) => {
@@ -25,6 +26,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
   return (
     <div className="grid grid-cols-12">
+      <p className="text-2xl text-white"></p>
       <div
         className={cn(
           "col-span-1 flex",
