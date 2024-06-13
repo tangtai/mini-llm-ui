@@ -8,5 +8,5 @@ export default {
   dbCredentials: {
     url: env.DATABASE_URL,
   },
-  tablesFilter: ["mini-llm_*"],
+  tablesFilter: ["mini-llm-db_*"],
 } satisfies Config;

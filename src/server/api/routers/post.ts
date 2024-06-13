@@ -1,13 +1,12 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "@/server/api/trpc";
 import { posts } from "@/server/db/schema";
 import { desc, eq } from "drizzle-orm";
-
-let post = {
-  id: 1,
-  name: "Hello World",
-};
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -18,24 +17,37 @@ export const postRouter = createTRPCRouter({
       };
     }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
+      // simulate a slow db call
+      // await new Promise((resolve) => setTimeout(resolve, 500));
       await ctx.db.insert(posts).values({
         name: input.name,
+        createdById: ctx.session.user.id,
       });
     }),
 
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.query.posts.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const res = await ctx.db.query.posts.findMany({
       orderBy: (posts, { desc }) => [desc(posts.createdAt)],
       limit: 100,
     });
+    // await new Promise((resolve) => setTimeout(resolve, 500));
+    return res;
   }),
 
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      // await new Promise((resolve) => setTimeout(resolve, 500));
       await ctx.db.delete(posts).where(eq(posts.id, input.id));
     }),
+
+  getProtected: protectedProcedure.query(({ ctx }) => {
+    return {
+      message: "Hello from protected post api",
+      user: ctx.session.user,
+    };
+  }),
 });
