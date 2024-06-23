@@ -25,6 +25,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
   return (
     <div className="grid grid-cols-12">
+      <p className="text-2xl text-white"></p>
       <div
         className={cn(
           "col-span-1 flex",
