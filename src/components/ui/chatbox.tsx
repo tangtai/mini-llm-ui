@@ -6,14 +6,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import Markdown from "react-markdown";
 import { Skeleton } from "./skeleton";
-import { api } from "@/trpc/react";
 
 interface ChatBoxProps {
   message: ChatMessage;
   assistantTyping?: boolean;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = async ({
+const ChatBox: React.FC<ChatBoxProps> = ({
   message,
   assistantTyping = false,
 }) => {

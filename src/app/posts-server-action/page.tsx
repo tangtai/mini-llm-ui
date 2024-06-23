@@ -8,8 +8,10 @@ import DeletePostButton from "./_parts/delete-post-button";
 
 export default async function PostsServerActionPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-100">
-      <h1 className="py-8 text-2xl font-bold">Server Action rendering</h1>
+    <main className="flex flex-col items-center justify-center bg-background">
+      <h1 className="py-8 text-2xl font-bold text-foreground">
+        Server Action rendering
+      </h1>
 
       <div className="flex gap-6">
         <Link href="/posts-client" className="underline">
@@ -31,10 +33,10 @@ export default async function PostsServerActionPage() {
 async function PostList() {
   const posts = await api.post.getAll();
   return (
-    <div className="flex h-[800px] flex-col gap-2 overflow-auto">
+    <div className="flex flex-col gap-2 overflow-auto ">
       {posts.map((post) => (
         <div
-          className="flex w-96 items-center justify-between gap-2 rounded-md bg-background px-4 py-2 text-foreground"
+          className="flex w-96 items-center justify-between gap-2 rounded-md border bg-card px-4 py-2 text-foreground"
           key={post.id}
         >
           <div className="flex flex-col">

@@ -15,7 +15,7 @@ export default function CreatePostForm() {
   });
 
   return (
-    <div className="flex flex-col rounded-md bg-background p-2">
+    <div className="flex flex-col rounded-md border bg-background p-2">
       <form
         onSubmit={async (e) => {
           e.preventDefault();

@@ -10,7 +10,7 @@ export default function PostClientPage() {
   const { data, isLoading, error } = api.post.getAll.useQuery();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-100">
+    <main className="flex flex-col items-center justify-center">
       <h1 className="py-8 text-2xl font-bold">client rendering</h1>
 
       <div className="flex gap-6">
@@ -49,7 +49,7 @@ const PostCard: React.FC<PostCardPorps> = ({ post }) => {
   });
 
   return (
-    <div className="flex w-96 items-center justify-between gap-2 rounded-md bg-background px-4 py-2 text-foreground">
+    <div className="flex w-96 items-center justify-between gap-2 rounded-md border bg-background px-4 py-2 text-foreground">
       <div className="flex flex-col">
         <p className="line-clamp-1 text-sm">{post.name}</p>
         <p className="text-xs text-gray-400">{post.createdAt.toDateString()}</p>
@@ -84,7 +84,7 @@ const PostCreate: React.FC = () => {
         e.preventDefault();
         createPost.mutate({ name });
       }}
-      className="flex flex-col rounded-md bg-background p-2"
+      className="flex flex-col rounded-md border bg-background p-2"
     >
       <Input
         type="text"

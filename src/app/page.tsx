@@ -8,7 +8,7 @@ export default async function Home() {
   const session = await getServerAuthSession();
 
   return (
-    <main className="flex min-h-screen flex-col">
+    <main className="flex flex-col">
       <div className="container mx-auto flex flex-grow flex-col items-center justify-center bg-background">
         <div className="flex w-96 flex-col gap-3 p-4 font-mono">
           <Link href="/simplechat" className="underline">
