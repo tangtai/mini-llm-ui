@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { users, passwords } from "@/server/db/schema";
+import { users, passwords } from "@/server/db/schema/account";
 
 export const registerRouter = createTRPCRouter({
   email: publicProcedure
