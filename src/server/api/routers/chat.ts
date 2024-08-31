@@ -36,19 +36,42 @@ export const chatRouter = createTRPCRouter({
   newUserMessage: protectedProcedure
     .input(
       z.object({
-        chatId: z.number(),
+        chatId: z.nullable(z.number()),
         message: z.string().min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      let _chatId;
+
+      if (!input.chatId) {
+        const newChatName = `${input.message.substring(0, 30)}...`;
+
+        const newChat = await await ctx.db
+          .insert(chats)
+          .values({
+            createdById: ctx.session.user.id,
+            name: newChatName,
+          })
+          .returning({ id: chats.id });
+        _chatId = newChat[0].id;
+      } else {
+        _chatId = input.chatId;
+      }
+
       const newUserMessage = {
-        chatId: input.chatId,
+        chatId: _chatId,
         role: "user",
         content: input.message,
         createdById: ctx.session.user.id,
       };
+
       await ctx.db.insert(chatMessages).values(newUserMessage);
-      return { success: true, message: "new user message added", data: null };
+
+      return {
+        success: true,
+        message: "new user message added",
+        data: { chatId: _chatId },
+      };
     }),
 
   newAssistantMessage: protectedProcedure
@@ -82,6 +105,24 @@ export const chatRouter = createTRPCRouter({
       return {
         success: true,
         message: "new assistant message added",
+        data: null,
+      };
+    }),
+
+  deleteChat: protectedProcedure
+    .input(z.object({ chatId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      console.log("delete chat", input.chatId);
+
+      // delete chat and its messages
+      await ctx.db
+        .delete(chatMessages)
+        .where(eq(chatMessages.chatId, input.chatId));
+      await ctx.db.delete(chats).where(eq(chats.id, input.chatId));
+
+      return {
+        success: true,
+        message: "chat deleted",
         data: null,
       };
     }),

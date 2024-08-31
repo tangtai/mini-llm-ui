@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
   return (
@@ -20,7 +21,9 @@ function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
             variant={"outline"}
             size={"icon"}
           >
-            <AddIcon />
+            <Link href="/chat-ssr">
+              <AddIcon />
+            </Link>
           </Button>
         </div>
       </div>
@@ -37,7 +40,7 @@ function SideBar({
 }) {
   return (
     <div
-      className={`m-4 mt-12 w-56 rounded-md bg-secondary px-2 py-2 ${
+      className={`m-4 mt-12 min-w-64 basis-1/5 rounded-md bg-secondary px-2 py-2 ${
         showSidebar ? "" : "hidden"
       }`}
     >

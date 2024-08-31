@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import {
   createUserNewMessage,
@@ -12,14 +12,23 @@ import {
 
 export default function NewMessage() {
   const searchParams = useSearchParams();
-
+  const router = useRouter();
   const [message, setMessage] = useState("");
 
   const { execute, status, result } = useAction(createUserNewMessage, {
-    onSuccess: async () => {
+    onSuccess: async ({ data }) => {
       setMessage("");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const urlChatId = searchParams.get("chat_id");
+      const dataChatId = data.chatId;
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
       executeAssistant({ chatId: Number(searchParams.get("chat_id")) });
+
+      if (urlChatId !== dataChatId.toString()) {
+        const _url = `/chat-ssr?chat_id=${dataChatId}`;
+        router.push(_url);
+      }
     },
   });
 

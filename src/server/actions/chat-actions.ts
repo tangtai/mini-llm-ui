@@ -31,3 +31,13 @@ export const createAssistantNewMessage = action(
     return res;
   },
 );
+
+const DeleteChatSchema = z.object({
+  chatId: z.number(),
+});
+
+export const deleteChat = action(DeleteChatSchema, async ({ chatId }) => {
+  const res = await api.chat.deleteChat({ chatId });
+  revalidatePath("/chat-ssr");
+  return res;
+});
