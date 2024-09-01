@@ -4,7 +4,7 @@ import { getProviders, signIn, useSession } from "next-auth/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { api } from "@/trpc/react";
 import { DiscordLogoIcon } from "@radix-ui/react-icons";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,9 @@ import { Button } from "@/components/ui/button";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [showRegister, sethowRegister] = useState(false);
+  const [errorDisplay, setErrorDisplay] = useState("");
 
   const { data: provider } = useQuery({
     queryKey: ["providers"],
@@ -22,70 +25,159 @@ export default function SignIn() {
 
   const {
     mutate: signInWithEmail,
-    isPending,
-    isError,
-    error,
+    isPending: signInPending,
+    error: signInError,
   } = useEmailSignin();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    signInWithEmail({
+  const {
+    mutate: registerWithEmail,
+    isPending: registerPending,
+    error: registerError,
+  } = api.register.email.useMutation({
+    onSuccess: () => {
+      signInWithEmail({
+        email,
+        password,
+      });
+    },
+  });
+
+  useEffect(() => {
+    setDisplayName(email.split("@")[0]);
+  }, [email]);
+
+  useEffect(() => {
+    if (signInPending || registerPending) {
+      setErrorDisplay("");
+    } else if (signInError) {
+      setErrorDisplay(signInError.message);
+    } else if (registerError) {
+      setErrorDisplay(registerError.message);
+    }
+  }, [signInPending, registerPending, signInError, registerError]);
+
+  const handleEmailLogin = async () => {
+    await signInWithEmail({
       email,
       password,
     });
   };
 
+  const handleEmailRegister = async () => {
+    registerWithEmail({
+      name: email.split("@")[0],
+      email: email,
+      password: password,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (showRegister) {
+      handleEmailRegister();
+    } else {
+      handleEmailLogin();
+    }
+  };
+
+  const toggleLoginRegister = () => {
+    sethowRegister(!showRegister);
+    setErrorDisplay("");
+  };
+
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-gray-100 px-4  dark:bg-gray-950">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-secondary px-4 dark:bg-gray-950">
       <div className="w-full max-w-md space-y-6">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold tracking-tighter">Mini LLM</h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Enter your email and password to sign in to your account.
-          </p>
+          <h1 className="text-3xl font-bold tracking-tighter">Mini LLM UI</h1>
+          <h1 className="text-sm font-semibold tracking-tighter text-zinc-400">
+            a demo by Tangtai
+          </h1>
         </div>
 
         <Card>
-          <CardContent className="space-y-4">
-            <div className="mt-4 space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            {isError && !isPending ? (
-              <p className="h-4 text-sm text-destructive">
-                Error: {error.message}
-              </p>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-2">
+              <div className="mt-4 space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="youremail@somemail.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              {showRegister ? (
+                <div className="space-y-2">
+                  <Label htmlFor="displayname">Display name</Label>
+                  <Input
+                    id="displayname"
+                    type="text"
+                    required
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                  />
+                </div>
+              ) : null}
+
+              <p className="h-4 text-sm text-destructive">{errorDisplay}</p>
+            </CardContent>
+
+            {showRegister ? (
+              <CardFooter className="flex flex-col">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={signInPending}
+                >
+                  Create account
+                </Button>
+                <p className="py-1 text-xs">or</p>
+                <Button
+                  variant="secondary"
+                  className="w-full"
+                  type="button"
+                  onClick={toggleLoginRegister}
+                  disabled={signInPending}
+                >
+                  Back to login
+                </Button>
+              </CardFooter>
             ) : (
-              <div className="h-4"></div>
+              <CardFooter className="flex flex-col">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={registerPending}
+                >
+                  Sign in
+                </Button>
+                <p className="py-1 text-xs">or</p>
+                <Button
+                  variant="secondary"
+                  className="w-full"
+                  type="button"
+                  onClick={toggleLoginRegister}
+                  disabled={registerPending}
+                >
+                  Register
+                </Button>
+              </CardFooter>
             )}
-          </CardContent>
-          <CardFooter>
-            <Button
-              type="submit"
-              className="w-full"
-              onClick={handleSubmit}
-              disabled={isPending}
-            >
-              Sign in
-            </Button>
-          </CardFooter>
+          </form>
         </Card>
 
         <div className="flex items-center justify-center space-x-2">
@@ -99,7 +191,7 @@ export default function SignIn() {
         <div>
           {provider &&
             Object.entries(provider).map(([key, value]) => {
-              if (key !== "credentials") {
+              if (key == "discord") {
                 return (
                   <div key={key}>
                     <Button
@@ -125,28 +217,31 @@ export default function SignIn() {
   );
 }
 
-interface EmailSignInCredentials {
+interface EmailAuthCredentials {
   email: string;
   password: string;
 }
 
 const useEmailSignin = () => {
+  const router = useRouter();
   return useMutation({
-    mutationFn: async (credentials: EmailSignInCredentials) => {
+    mutationFn: async ({ email, password }: EmailAuthCredentials) => {
       const result = await signIn("credentials", {
-        ...credentials,
-        redirect: true,
+        email,
+        password,
+        redirect: false,
         callbackUrl: "/posts-server-action",
       });
 
       if (result?.error) {
-        console.log(result);
         throw new Error(result.error);
       }
     },
     onError: (error) => {
       console.error("Failed to sign in:", error.message);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      router.push("/chat-ssr");
+    },
   });
 };
