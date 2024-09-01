@@ -28,7 +28,7 @@ export default async function Page({
   }
 
   return (
-    <div className="flex min-w-96 bg-red-200">
+    <div className="flex min-w-96">
       <Suspense fallback={<p>laoding</p>}>
         {/* <ChatMessages
           chatId={

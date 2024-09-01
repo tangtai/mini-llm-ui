@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { doConversation } from "@/server/actions/chats-actions";
 import { readStreamableValue } from "ai/rsc";
 import { ChatMessage } from "@/types/types";
@@ -22,6 +22,7 @@ interface CurrentChatProps {
 
 export default function CurrentChat({ chatId }: CurrentChatProps) {
   const router = useRouter();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
 
@@ -85,16 +86,20 @@ export default function CurrentChat({ chatId }: CurrentChatProps) {
     }
   };
 
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="w-full">
       <ScrollArea className="h-[calc(100vh-9rem)] p-4">
         {chatId === undefined && (
-          <div className="text-center text-lg">
+          <div className="animate-pulse text-center text-lg font-medium text-muted-foreground">
             Start a new conversation by typing...
           </div>
         )}
         {messages.map((m, i) => (
-          <div key={i}>
+          <div key={i} ref={scrollRef}>
             {m.role === "user" ? (
               <UserChatBubble message={m.content as string} />
             ) : (
@@ -105,7 +110,7 @@ export default function CurrentChat({ chatId }: CurrentChatProps) {
         <div className="h-44" />
       </ScrollArea>
 
-      <div className="flex w-full items-center justify-center bg-green-400">
+      <div className="flex w-full items-center justify-center">
         <div className="m-2 w-full rounded-md bg-secondary p-2 sm:w-3/5">
           <form className="flex space-x-2" onSubmit={handleSubmit}>
             <Textarea

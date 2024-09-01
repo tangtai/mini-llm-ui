@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTheme } from "next-themes";
-import { Sun, Moon, MessageCirclePlus, List } from "lucide-react";
+import { Sun, Moon, MessageSquarePlus, List } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
   const { theme, setTheme } = useTheme();
@@ -23,7 +24,7 @@ function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
           </Button>
           <Button variant={"outline"} size={"icon"}>
             <Link href="/chat-ssr">
-              <MessageCirclePlus className="size-4" />
+              <MessageSquarePlus className="size-4" />
             </Link>
           </Button>
         </div>
@@ -53,13 +54,16 @@ function SideBar({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`mt-12 w-44 basis-1/4 flex-col overflow-auto rounded-md bg-secondary pl-4
-         ${showSidebar ? "block" : "hidden"}`}
-    >
-      <h2 className="pb-2 pt-4 text-xl font-semibold">Past chats</h2>
-      <ScrollArea className="h-[calc(100vh-8rem)]">{children}</ScrollArea>
-    </div>
+    showSidebar && (
+      <div
+        className={cn(
+          "mt-12 w-44 basis-full flex-col overflow-auto rounded-md bg-secondary pl-4 sm:basis-1/4",
+        )}
+      >
+        <h2 className="pb-4 pt-6 text-xl font-semibold">Past chats</h2>
+        <ScrollArea className="h-[calc(100vh-8rem)]">{children}</ScrollArea>
+      </div>
+    )
   );
 }
 
@@ -73,12 +77,12 @@ export default function ChatLayout({
   const [showSidebar, setShowSidebar] = useState(false);
 
   return (
-    <section className="min-h-screen bg-blue-200 text-foreground">
+    <section className="min-h-screen text-foreground">
       <Header toggleSidebar={() => setShowSidebar(!showSidebar)} />
       <main className="flex flex-grow md:container md:mx-auto">
         <SideBar showSidebar={showSidebar}>{sidebarContent}</SideBar>
         <section
-          className={`w-full pt-12 ${showSidebar ? "basis-3/4" : "flex-1"}`}
+          className={`w-full pt-12 ${showSidebar ? "hidden sm:block sm:basis-3/4" : "flex-1"}`}
         >
           {children}
         </section>

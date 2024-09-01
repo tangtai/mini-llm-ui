@@ -1,6 +1,7 @@
 import { api, RouterOutputs } from "@/trpc/server";
 import Link from "next/link";
 import ChatDeleteButton from "./chat-delete-button";
+import { MessageSquareMore } from "lucide-react";
 
 export default async function ListChats() {
   const chats = await api.chat.getAllChats();
@@ -28,7 +29,8 @@ function ListItem({ chat }: ListItemProps) {
         href={`/chat-ssr?chat_id=${chat.id}`}
         className="flex h-10 flex-1 items-center"
       >
-        <p className="ml-2 overflow-hidden text-ellipsis">{chat.name}</p>
+        <MessageSquareMore className="m-2 size-4" />
+        <p className="overflow-hidden text-ellipsis">{chat.name}</p>
       </Link>
       <ChatDeleteButton
         className="hidden bg-red-400 group-hover:flex"
