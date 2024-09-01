@@ -63,7 +63,7 @@ export default function ChatHeader({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
+          {/* <Button
             variant="outline"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -73,7 +73,7 @@ export default function ChatHeader({
             ) : (
               <Moon className="size-4" />
             )}
-          </Button>
+          </Button> */}
         </div>
       </div>
     </header>

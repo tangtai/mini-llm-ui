@@ -26,7 +26,7 @@ const Header: React.FC = () => {
               </Link>
             </Button>
           )}
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
             ) : (
               <Moon className="size-4" />
             )}
-          </Button>
+          </Button> */}
         </div>
       </div>
     </header>

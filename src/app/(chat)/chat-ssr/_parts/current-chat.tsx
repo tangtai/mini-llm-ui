@@ -51,7 +51,11 @@ export default function CurrentChat({ chatId }: CurrentChatProps) {
     }
   }, [data]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e:
+      | React.FormEvent<HTMLFormElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
     e.preventDefault();
 
     if (!input.trim()) return;

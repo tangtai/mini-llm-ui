@@ -36,7 +36,7 @@ export default async function Home() {
               <Smile className="size-12 rotate-45 duration-500" />
             </div>
             <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
-              It is just something I've hacked together with my choices of
+              It is just something I have hacked together with my choices of
               techstack for a fullstack web application.
             </p>
           </div>
