@@ -6,7 +6,7 @@ export default async function ListChats() {
   const chats = await api.chat.getAllChats();
 
   return (
-    <div className="flex flex-1 flex-col gap-1">
+    <div className="flex flex-1 flex-col gap-2 pr-4">
       {chats.map((chat) => (
         <ListItem chat={chat} key={chat.id} />
       ))}
@@ -22,13 +22,13 @@ function ListItem({ chat }: ListItemProps) {
   return (
     <div
       key={chat.id}
-      className="group flex w-full justify-between rounded-sm bg-background px-2 py-1 text-sm text-foreground opacity-70 hover:opacity-100"
+      className="group flex items-center justify-between rounded-sm bg-background px-2 py-1 text-sm text-foreground opacity-70 hover:opacity-100"
     >
       <Link
         href={`/chat-ssr?chat_id=${chat.id}`}
-        className="flex h-8 flex-1 items-center"
+        className="flex h-10 flex-1 items-center"
       >
-        <p className="overflow-hidden text-ellipsis">{chat.name}</p>
+        <p className="ml-2 overflow-hidden text-ellipsis">{chat.name}</p>
       </Link>
       <ChatDeleteButton
         className="hidden bg-red-400 group-hover:flex"

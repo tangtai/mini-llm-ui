@@ -3,10 +3,15 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useTheme } from "next-themes";
+import { Sun, Moon, MessageCirclePlus, List } from "lucide-react";
 
 function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
+  const { theme, setTheme } = useTheme();
+
   return (
-    <header className="container fixed left-0 top-0 mx-auto w-full bg-background/20 px-4 backdrop-blur-sm">
+    <header className="container fixed left-0 right-0 top-0 mx-auto w-full px-8 backdrop-blur-sm">
       <div className="flex h-12 items-center justify-between">
         <div className="flex justify-between gap-2">
           <Button
@@ -14,16 +19,25 @@ function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
             variant={"outline"}
             size={"icon"}
           >
-            <SidebarIcon />
+            <List className="size-4" />
           </Button>
-          <Button
-            // onClick={() => setShowSidebar(!showSidebar)}
-            variant={"outline"}
-            size={"icon"}
-          >
+          <Button variant={"outline"} size={"icon"}>
             <Link href="/chat-ssr">
-              <AddIcon />
+              <MessageCirclePlus className="size-4" />
             </Link>
+          </Button>
+        </div>
+        <div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Sun className="size-4" />
+            ) : (
+              <Moon className="size-4" />
+            )}
           </Button>
         </div>
       </div>
@@ -40,11 +54,11 @@ function SideBar({
 }) {
   return (
     <div
-      className={`m-4 mt-12 min-w-64 basis-1/5 rounded-md bg-secondary px-2 py-2 ${
-        showSidebar ? "" : "hidden"
-      }`}
+      className={`mt-12 w-44 basis-1/4 flex-col overflow-auto rounded-md bg-secondary pl-4
+         ${showSidebar ? "block" : "hidden"}`}
     >
-      {children}
+      <h2 className="pb-2 pt-4 text-xl font-semibold">Past chats</h2>
+      <ScrollArea className="h-[calc(100vh-8rem)]">{children}</ScrollArea>
     </div>
   );
 }
@@ -59,43 +73,16 @@ export default function ChatLayout({
   const [showSidebar, setShowSidebar] = useState(false);
 
   return (
-    <section className="flex h-dvh bg-background text-foreground">
-      <SideBar showSidebar={showSidebar}>{sidebarContent}</SideBar>
-      <main className="flex grow">
-        <Header toggleSidebar={() => setShowSidebar(!showSidebar)} />
-        <section className="pt-12">{children}</section>
+    <section className="min-h-screen bg-blue-200 text-foreground">
+      <Header toggleSidebar={() => setShowSidebar(!showSidebar)} />
+      <main className="flex flex-grow md:container md:mx-auto">
+        <SideBar showSidebar={showSidebar}>{sidebarContent}</SideBar>
+        <section
+          className={`w-full pt-12 ${showSidebar ? "basis-3/4" : "flex-1"}`}
+        >
+          {children}
+        </section>
       </main>
     </section>
   );
 }
-
-const SidebarIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className="size-4"
-  >
-    <path
-      fillRule="evenodd"
-      d="M7.502 6h7.128A3.375 3.375 0 0 1 18 9.375v9.375a3 3 0 0 0 3-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 0 0-.673-.05A3 3 0 0 0 15 1.5h-1.5a3 3 0 0 0-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6ZM13.5 3A1.5 1.5 0 0 0 12 4.5h4.5A1.5 1.5 0 0 0 15 3h-1.5Z"
-      clipRule="evenodd"
-    />
-    <path
-      fillRule="evenodd"
-      d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V9.375ZM6 12a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V12Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 15a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V15Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 18a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V18Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75Z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-
-const AddIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-    className="size-4"
-  >
-    <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-  </svg>
-);

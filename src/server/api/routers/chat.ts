@@ -26,7 +26,7 @@ export const chatRouter = createTRPCRouter({
         where: eq(chats.id, input.chatId),
         with: {
           messages: {
-            orderBy: (chatMessages, { desc }) => [desc(chatMessages.createdAt)],
+            orderBy: (chatMessages, { asc }) => [asc(chatMessages.createdAt)],
           },
         },
       });
