@@ -33,7 +33,7 @@ export const chatRouter = createTRPCRouter({
       return chat;
     }),
 
-  newUserMessage: protectedProcedure
+  addUserMessage: protectedProcedure
     .input(
       z.object({
         chatId: z.nullable(z.number()),
@@ -71,6 +71,30 @@ export const chatRouter = createTRPCRouter({
         success: true,
         message: "new user message added",
         data: { chatId: _chatId },
+      };
+    }),
+
+  addNewAssistantMessage: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.number(),
+        message: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const newAssistantMessage = {
+        chatId: input.chatId,
+        role: "assistant",
+        content: input.message,
+        createdById: ctx.session.user.id,
+      };
+
+      await ctx.db.insert(chatMessages).values(newAssistantMessage);
+
+      return {
+        success: true,
+        message: "new assistant message added",
+        data: null,
       };
     }),
 

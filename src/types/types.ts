@@ -1,5 +1,6 @@
 export type ChatMessage = {
-  role: "assistant" | "user";
+  // role: "assistant" | "user";
+  role: string;
   content: string;
 };
 
