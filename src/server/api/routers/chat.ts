@@ -13,6 +13,7 @@ import ollama from "ollama";
 export const chatRouter = createTRPCRouter({
   getAllChats: protectedProcedure.query(async ({ ctx }) => {
     const res = await ctx.db.query.chats.findMany({
+      where: eq(chats.createdById, ctx.session.user.id),
       orderBy: (chats, { desc }) => [desc(chats.createdAt)],
       limit: 100,
     });

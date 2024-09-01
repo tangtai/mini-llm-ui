@@ -5,3 +5,5 @@ export const schema = {
   ...accountSchema,
   ...chatSchema,
 };
+
+export * from "./account";
