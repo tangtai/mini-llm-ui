@@ -1,50 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useTheme } from "next-themes";
-import { Sun, Moon, MessageSquarePlus, List } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-function Header({ toggleSidebar }: { toggleSidebar: () => void }) {
-  const { theme, setTheme } = useTheme();
-
-  return (
-    <header className="container fixed left-0 right-0 top-0 mx-auto w-full px-8 backdrop-blur-sm">
-      <div className="flex h-12 items-center justify-between">
-        <div className="flex justify-between gap-2">
-          <Button
-            onClick={() => toggleSidebar()}
-            variant={"outline"}
-            size={"icon"}
-          >
-            <List className="size-4" />
-          </Button>
-          <Button variant={"outline"} size={"icon"}>
-            <Link href="/chat-ssr">
-              <MessageSquarePlus className="size-4" />
-            </Link>
-          </Button>
-        </div>
-        <div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? (
-              <Sun className="size-4" />
-            ) : (
-              <Moon className="size-4" />
-            )}
-          </Button>
-        </div>
-      </div>
-    </header>
-  );
-}
+import ChatHeader from "./chat-header";
 
 function SideBar({
   showSidebar,
@@ -78,7 +37,7 @@ export default function ChatLayout({
 
   return (
     <section className="min-h-screen text-foreground">
-      <Header toggleSidebar={() => setShowSidebar(!showSidebar)} />
+      <ChatHeader toggleSidebar={() => setShowSidebar(!showSidebar)} />
       <main className="flex flex-grow md:container md:mx-auto">
         <SideBar showSidebar={showSidebar}>{sidebarContent}</SideBar>
         <section

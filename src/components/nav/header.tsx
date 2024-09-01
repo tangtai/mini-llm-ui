@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Bot, Sun, Moon, User } from "lucide-react";
+import { Bot, Sun, Moon, LogOut } from "lucide-react";
 
 const Header: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -22,7 +22,7 @@ const Header: React.FC = () => {
           {status === "authenticated" && (
             <Button variant="ghost" size="icon">
               <Link href={"/api/auth/signout"}>
-                <User className="size-4" />
+                <LogOut className="size-4" />
               </Link>
             </Button>
           )}
