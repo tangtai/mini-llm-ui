@@ -2,7 +2,6 @@
 
 import React from "react";
 import Markdown from "react-markdown";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserRound, Bot } from "lucide-react";
 
 interface ChatBubbleProps {

@@ -12,20 +12,6 @@ export default async function Home() {
     <main className="flex flex-col pt-12">
       <Header />
       <div className="container mx-auto flex h-[calc(100vh-4rem)] flex-grow flex-col ">
-        {/* <div className="flex w-96 flex-col gap-3 bg-red-400 p-4 font-mono">
-          <Link href="/simplechat" className="underline">
-            to Simple Chat
-          </Link>
-          <Link href="/posts-client" className="underline">
-            to Posts Client
-          </Link>
-          <Link href="/posts-server-action" className="underline">
-            to Posts Server Action
-          </Link>
-          <Link href="/chat-ssr" className="underline">
-            chat ssr
-          </Link>
-        </div> */}
         <div className="basis-1/6"></div>
         <div className="flex flex-1 flex-col items-center text-center">
           <div className="space-y-2">
@@ -37,7 +23,7 @@ export default async function Home() {
             </div>
             <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
               It is just something I have hacked together with my choices of
-              techstack for a fullstack web application.
+              tech stack for a fullstack web application.
             </p>
           </div>
           <Button

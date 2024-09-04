@@ -10,7 +10,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { users } from "./account";
-
 import { z } from "zod";
 const roleEnum = z.enum(["user", "assistant"]);
 
