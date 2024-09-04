@@ -5,7 +5,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import { posts } from "@/server/db/schema/account";
+import { posts } from "@/server/db/schema/post";
 import { desc, eq } from "drizzle-orm";
 
 export const postRouter = createTRPCRouter({
